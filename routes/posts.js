@@ -29,7 +29,14 @@ router.delete('/:id', async function (req, res, next) {
       id: Number(req.params.id)
     }
   });
-  res.json(post);
+  if (post) {
+    res.json(post);
+  } else {
+    res.json({
+      message: 'Post not found'
+    });
+  }
+
 });
 
 module.exports = router;
