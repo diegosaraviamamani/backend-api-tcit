@@ -12,31 +12,33 @@ router.get('/', async function (req, res, next) {
 
 /* POST posts listing. */
 router.post('/', async function (req, res, next) {
-  const {name, description} = req.body;
-  const newPost = await prisma.post.create({
-    data: {
-      name,
-      description
-    }
-  });
-  res.json(newPost);
+  try {
+    const {name, description} = req.body;
+    const newPost = await prisma.post.create({
+      data: {
+        name,
+        description
+      }
+    });
+    res.json(newPost);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /* DELETE post by id. */
 router.delete('/:id', async function (req, res, next) {
-  const post = await prisma.post.delete({
-    where: {
-      id: Number(req.params.id)
-    }
-  });
-  if (post) {
-    res.json(post);
-  } else {
-    res.json({
-      message: 'Post not found'
+  try {
+    const {id} = req.params;
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: Number(req.params.id)
+      }
     });
+    res.json(deletedPost);
+  } catch (error) {
+    res.json(error);
   }
-
 });
 
 module.exports = router;
